@@ -157,3 +157,8 @@ fedpriv/
   outputs/                   generated: results, plots, checkpoints, logs
   PAPER_GUIDE.md              maps this repo's outputs onto a paper
 ```
+
+
+
+Author 
+Priyal Parmar 
