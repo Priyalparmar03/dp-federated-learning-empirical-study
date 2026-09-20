@@ -1,0 +1,44 @@
+run_id: default_run
+seed: 42
+output_dir: outputs
+
+dataset:
+  name: synthetic          # synthetic | cifar10 | fashion_mnist | adult
+  root: ./data
+  n_samples: 6000
+  n_features: 20
+  n_classes: 4
+  val_split: 0.15
+  test_split: 0.15
+
+partition:
+  strategy: dirichlet       # iid | dirichlet | label_skew | quantity_skew
+  dirichlet_alpha: 0.5
+  labels_per_client: 2
+  quantity_skew_sigma: 0.5
+
+privacy:
+  enabled: true
+  mechanism: gaussian        # gaussian | laplace | none
+  epsilon: 1.0
+  delta: 0.00001
+  clip_norm: 1.0
+  accountant: analytic_gaussian   # analytic_gaussian | basic_composition
+
+network:
+  simulate: true
+  base_latency_ms: 20.0
+  latency_jitter_ms: 15.0
+  bandwidth_mbps: 10.0
+  dropout_prob: 0.05
+  asynchronous: false
+
+federated:
+  algorithm: fedavg          # fedavg | fedprox
+  fedprox_mu: 0.01
+  n_clients: 40
+  client_fraction: 0.75
+  n_rounds: 15
+  local_epochs: 2
+  batch_size: 32
+  learning_rate: 0.05

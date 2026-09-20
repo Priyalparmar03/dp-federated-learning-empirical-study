@@ -1,0 +1,46 @@
+# Adult Income dataset (UCI/OpenML) — binary classification, >50K vs <=50K.
+# Tabular, low-dimensional like the synthetic benchmark, so DP noise does
+# NOT get overwhelmed by parameter count the way it does on flattened
+# image datasets (see cifar10.yaml's docstring / PAPER_GUIDE.md Section 4.5).
+# Requires network access on first run (downloads via sklearn.fetch_openml,
+# cached locally afterward under dataset.root).
+run_id: adult_run
+seed: 42
+output_dir: outputs
+
+dataset:
+  name: adult
+  root: ./data
+  val_split: 0.15
+  test_split: 0.15
+
+partition:
+  strategy: dirichlet
+  dirichlet_alpha: 0.5
+
+privacy:
+  enabled: true
+  mechanism: gaussian
+  epsilon: 1.0
+  delta: 0.00001
+  clip_norm: 1.0
+  accountant: analytic_gaussian
+  clip_mode: semantic
+  semantic_class_weights:
+    1: 2.0
+
+network:
+  simulate: true
+  base_latency_ms: 20.0
+  latency_jitter_ms: 15.0
+  bandwidth_mbps: 10.0
+  dropout_prob: 0.05
+
+federated:
+  algorithm: fedavg
+  n_clients: 40
+  client_fraction: 0.75
+  n_rounds: 15
+  local_epochs: 2
+  batch_size: 32
+  learning_rate: 0.05

@@ -1,0 +1,45 @@
+# Fashion-MNIST (torchvision) — 10-class clothing image classification.
+# Like CIFAR-10, images are flattened to feature vectors (28x28x1 = 784
+# dims), so expect the same dimensionality-vs-DP-noise effect documented
+# in cifar10.yaml / PAPER_GUIDE.md Section 4.5 — high input dimensionality
+# means DP noise overwhelms the signal much more than on the synthetic
+# or Adult tabular benchmarks at the same epsilon.
+# Requires: pip install torch torchvision (already installed for you),
+# and network access on first run (auto-downloads ~30MB via torchvision).
+run_id: fashion_mnist_run
+seed: 42
+output_dir: outputs
+
+dataset:
+  name: fashion_mnist
+  root: ./data
+  val_split: 0.15
+  test_split: 0.15
+
+partition:
+  strategy: dirichlet
+  dirichlet_alpha: 0.5
+
+privacy:
+  enabled: true
+  mechanism: gaussian
+  epsilon: 1.0
+  delta: 0.00001
+  clip_norm: 1.0
+  accountant: analytic_gaussian
+
+network:
+  simulate: true
+  base_latency_ms: 20.0
+  latency_jitter_ms: 15.0
+  bandwidth_mbps: 10.0
+  dropout_prob: 0.05
+
+federated:
+  algorithm: fedavg
+  n_clients: 40
+  client_fraction: 0.75
+  n_rounds: 15
+  local_epochs: 2
+  batch_size: 32
+  learning_rate: 0.05
